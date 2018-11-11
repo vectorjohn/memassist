@@ -1,27 +1,30 @@
 import * as React from 'react';
 import './App.css';
 
-import logo from './logo.svg';
+import Header from './Header';
+import NoteForm from './NoteForm';
+
+// import logo from './logo.svg';
 
 class App extends React.Component {
   public render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <p>Or {foo('lol')}</p>
+        <Header>
+          <a href="list">Notes</a>
+          <a href="add">Add</a>
+        </Header>
+        <NoteForm onSubmit={submitted}/>
       </div>
     );
   }
 }
 
-function foo(x: string): string {
-  return '--> ' + x + ' <--';
+function submitted(event: React.FormEvent<HTMLFormElement>) {
+  const formData = new FormData(event.currentTarget);
+  // tslint:disable-next-line:no-console
+  console.log('I submitted!', formData.get('body'))
+  event.preventDefault();
 }
 
 export default App;
