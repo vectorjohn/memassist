@@ -1,8 +1,7 @@
 import { Note } from './notes/NoteService';
 import * as NoteService from './notes/NoteService';
 
-type Action = {type: string, payload: any}
-
+interface Action {type: string, payload: any}
 type Dispatch = (action: Action) => any
 
 function standardAction(type: string, buildPayload = (x: any) => x) {

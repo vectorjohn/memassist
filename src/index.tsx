@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
-import { combineReducers, createStore, applyMiddleware } from 'redux'
-import reduxThunk from 'redux-thunk';
+import { applyMiddleware, combineReducers, createStore } from 'redux'
 import reduxLogger from 'redux-logger';
+import reduxThunk from 'redux-thunk';
 import * as reducers from './reducers'
 
 import App from './App';
