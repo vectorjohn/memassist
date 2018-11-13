@@ -14,17 +14,19 @@ class App extends React.Component {
           <a href="list">Notes</a>
           <a href="add">Add</a>
         </Header>
-        <NoteForm onSubmit={submitted}/>
+        <NoteForm />
       </div>
     );
   }
 }
 
+/*
 function submitted(event: React.FormEvent<HTMLFormElement>) {
   const formData = new FormData(event.currentTarget);
   // tslint:disable-next-line:no-console
   console.log('I submitted!', formData.get('body'))
   event.preventDefault();
 }
+*/
 
 export default App;

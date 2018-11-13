@@ -1,16 +1,29 @@
 export interface Note {
-  id: string,
+  id?: string,
   title: string,
   body: string,
-  created: Date
+  created?: Date
 }
 
 export interface NoteDatabase {
   data: Note[]
 }
 
-let noteDatabase: NoteDatabase = {
-  data: []
+const SESSION_DB_KEY = 'noteDatabase';
+
+function newDatabase(): NoteDatabase {
+  return {data: []};
+}
+
+let noteDatabase = newDatabase();
+
+function commit() {
+  sessionStorage.setItem(SESSION_DB_KEY, JSON.stringify(noteDatabase));
+}
+
+function rollback() {
+  noteDatabase = JSON.parse(sessionStorage
+    .getItem(SESSION_DB_KEY) || 'null') || newDatabase();
 }
 
 export const saveNote = (note: Note) => {
@@ -20,6 +33,10 @@ export const saveNote = (note: Note) => {
     noteDatabase = {...noteDatabase,
       data: noteDatabase.data.concat([newNote])
     }
+    if (false && 'some error occurred') {
+      rollback();
+    }
+    commit();
     complete(newNote);
   })
 }

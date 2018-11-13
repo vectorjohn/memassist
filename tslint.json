@@ -8,6 +8,8 @@
     ]
   },
   "rules": {
-    "interface-name": [false, "always-prefix"]  
+    "interface-name": [false, "always-prefix"],
+    "ordered-imports": false,
+    "object-literal-sort-keys": false
   }
 }

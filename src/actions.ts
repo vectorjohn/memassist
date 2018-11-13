@@ -1,8 +1,9 @@
 import { Note } from './notes/NoteService';
 import * as NoteService from './notes/NoteService';
 
-interface Action {type: string, payload: any}
-type Dispatch = (action: Action) => any
+export interface Action {type: string, payload: any}
+export type Dispatch = (action: Action | Thunk) => any
+type Thunk = (dispatch: Dispatch, getState: () => any) => any;
 
 function standardAction(type: string, buildPayload = (x: any) => x) {
   return (payload: any) => ({type, payload: buildPayload(payload)})
