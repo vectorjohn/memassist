@@ -11,18 +11,20 @@ export interface NoteDatabase {
 
 const SESSION_DB_KEY = 'noteDatabase';
 
-function newDatabase(): NoteDatabase {
+export function newDatabase(): NoteDatabase {
   return {data: []};
 }
 
+// TODO: This is can later save to a server. Everything should return promises.
 let noteDatabase = newDatabase();
+const storage = localStorage;
 
 function commit() {
-  sessionStorage.setItem(SESSION_DB_KEY, JSON.stringify(noteDatabase));
+  storage.setItem(SESSION_DB_KEY, JSON.stringify(noteDatabase));
 }
 
 function rollback() {
-  noteDatabase = JSON.parse(sessionStorage
+  noteDatabase = JSON.parse(storage
     .getItem(SESSION_DB_KEY) || 'null') || newDatabase();
 }
 
@@ -38,5 +40,12 @@ export const saveNote = (note: Note) => {
     }
     commit();
     complete(newNote);
+  })
+}
+
+export const fetchAllNotes = () => {
+  return new Promise((complete, err) => {
+    rollback();
+    complete(noteDatabase);
   })
 }
