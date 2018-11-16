@@ -4,11 +4,14 @@ import './App.css';
 
 import Header from './Header';
 import NoteForm from './NoteForm';
+import NoteList from './NoteList';
+import SearchForm from './SearchForm';
 import { Note } from './notes/NoteService';
+import { searchChanged } from './actions';
 
 // import logo from './logo.svg';
 
-function App({notes = []}: {notes: Note[]}) {
+function App({notes, onSearch}: {notes: Note[], onSearch: (s: string) => any}) {
   // tslint:disable-next-line:no-console
 
   return (
@@ -18,10 +21,8 @@ function App({notes = []}: {notes: Note[]}) {
         <a href="add">Add</a>
       </Header>
       <NoteForm />
-      <br />
-      <dl>
-        {notes.map(note => (<React.Fragment key={note.id}><dt>{note.title}</dt><dd>{note.body}</dd></React.Fragment>))}
-      </dl>
+      <SearchForm onSearch={onSearch} />
+      <NoteList notes={notes} />
     </div>
   );
 }
@@ -34,5 +35,14 @@ function submitted(event: React.FormEvent<HTMLFormElement>) {
   event.preventDefault();
 }
 */
+const mapStateToProps = (state: {notes: {data: Note[]}, search: {filter: string}}) => ({
+  notes: state.notes.data.filter(n => n.title.match(new RegExp(state.search.filter)))
+});
 
-export default connect((state: {notes: {data: Note[]}}) => ({notes: state.notes.data}), null)(App);
+const mapDispatchToProps = (dispatch: any) => ({
+  onSearch: (s: string) => {
+    return dispatch(searchChanged(s));
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

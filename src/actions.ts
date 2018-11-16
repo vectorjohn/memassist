@@ -28,3 +28,6 @@ export const appInit = standardAction(APP_INIT);
 
 export const NOTES_LOADED = 'NOTES_LOADED';
 export const notesLoaded = standardAction(NOTES_LOADED)
+
+export const SEARCH_CHANGED = 'SEARCH_CHANGED';
+export const searchChanged = standardAction(SEARCH_CHANGED);

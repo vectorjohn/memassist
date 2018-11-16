@@ -1,5 +1,12 @@
 import {NoteDatabase, newDatabase} from './notes/NoteService';
-import { Action, NOTE_SAVED, NOTE_FORM_CHANGED, APP_INIT, NOTES_LOADED } from './actions';
+import {
+  Action,
+  NOTE_SAVED,
+  NOTE_FORM_CHANGED,
+  APP_INIT,
+  NOTES_LOADED,
+  SEARCH_CHANGED
+} from './actions';
 
 export const notes = (state: NoteDatabase = newDatabase(), action: Action) => {
   switch (action.type) {
@@ -26,6 +33,15 @@ export const noteForm = (state: NoteFormProps = defaultNoteForm, action: Action)
         title: formData.get('title'),
         body: formData.get('body')
       };
+  }
+  return state;
+}
+
+const defaultSearch = {filter: ''};
+export const search = (state = defaultSearch, action: Action) => {
+  switch (action.type) {
+    case SEARCH_CHANGED:
+      return {...state, filter: action.payload};
   }
   return state;
 }
