@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
+import * as fuzzy from 'fuzzy';
 import './App.css';
 
 import Header from './Header';
@@ -35,8 +36,14 @@ function submitted(event: React.FormEvent<HTMLFormElement>) {
   event.preventDefault();
 }
 */
+const fuzzyOpts = {
+  extract: (note: Note) => note.title + ' ' + note.body
+}
+const fuzzyMapToNotes = (r: fuzzy.FilterResult<Note>) => r.original;
+
 const mapStateToProps = (state: {notes: {data: Note[]}, search: {filter: string}}) => ({
-  notes: state.notes.data.filter(n => n.title.match(new RegExp(state.search.filter)))
+  // notes: state.notes.data.filter(n => n.title.match(new RegExp(state.search.filter)))
+  notes: fuzzy.filter(state.search.filter, state.notes.data, fuzzyOpts).map(fuzzyMapToNotes)
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
