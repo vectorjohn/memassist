@@ -41,9 +41,9 @@ const fuzzyOpts = {
 }
 const fuzzyMapToNotes = (r: fuzzy.FilterResult<Note>) => r.original;
 
-const mapStateToProps = (state: {notes: {data: Note[]}, search: {filter: string}}) => ({
+const mapStateToProps = (state: {notes: {data: Note[]}, filters: {search: string}}) => ({
   // notes: state.notes.data.filter(n => n.title.match(new RegExp(state.search.filter)))
-  notes: fuzzy.filter(state.search.filter, state.notes.data, fuzzyOpts).map(fuzzyMapToNotes)
+  notes: fuzzy.filter(state.filters.search, state.notes.data, fuzzyOpts).map(fuzzyMapToNotes)
 });
 
 const mapDispatchToProps = (dispatch: any) => ({

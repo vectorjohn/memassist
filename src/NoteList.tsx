@@ -4,5 +4,11 @@ import './NoteList.css';
 
 export default ({notes}: {notes: Note[]}) =>
   <dl className="NoteList">
-    {notes.map(note => (<React.Fragment key={note.id}><dt>{note.title}</dt><dd>{note.body}</dd></React.Fragment>))}
+    {notes.map(note =>
+      <React.Fragment key={note.id}>
+        {/*<dt><input type="text" value={note.title} /></dt>*/}
+        <dt>{note.title}</dt>
+        <dd>{note.body}</dd>
+      </React.Fragment>
+    )}
   </dl>

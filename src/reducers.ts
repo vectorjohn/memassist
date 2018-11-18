@@ -37,11 +37,16 @@ export const noteForm = (state: NoteFormProps = defaultNoteForm, action: Action)
   return state;
 }
 
-const defaultSearch = {filter: ''};
-export const search = (state = defaultSearch, action: Action) => {
+interface Filters {
+  search: string,
+  maxAge: Date | null
+}
+
+const defaultFilters: Filters = {search: '', maxAge: null};
+export const filters = (state = defaultFilters, action: Action) => {
   switch (action.type) {
     case SEARCH_CHANGED:
-      return {...state, filter: action.payload};
+      return {...state, search: action.payload};
   }
   return state;
 }
