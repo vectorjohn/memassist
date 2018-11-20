@@ -2,7 +2,7 @@ import {connect} from 'react-redux';
 import {FormEvent, ChangeEvent} from 'react';
 import {saveNote, noteFormChanged} from '../actions';
 import NoteForm from './NoteForm';
-import {Note} from '../notes/NoteService';
+import {newNote} from '../notes/NoteService';
 
 function mapStateToProps(state: any) {
   return {
@@ -17,10 +17,7 @@ function mapDispatchToProps(dispatch: any) {
     onSubmit: (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const formData = new FormData(event.currentTarget);
-      const note: Note = {
-        title: '' + formData.get('title'),
-        body: '' + formData.get('body')
-      }
+      const note = newNote(formData.get('title'), formData.get('body'));
       return dispatch(saveNote(note));
     },
     onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

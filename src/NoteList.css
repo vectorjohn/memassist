@@ -22,3 +22,9 @@ dl.NoteList > dd {
   padding: 0 0 20px 1em;
   white-space: pre;
 }
+
+dl.NoteList dd.selected,
+dl.NoteList dt.selected {
+  background-color: #557;
+  
+}

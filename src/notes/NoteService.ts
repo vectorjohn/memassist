@@ -1,8 +1,19 @@
-export interface Note {
-  id?: string,
+
+export interface NoteLink {
+  noteId: string,
+  name: string
+}
+
+export interface UnsavedNote {
   title: string,
   body: string,
-  created?: Date
+  tags: string[],
+  links: NoteLink[]
+}
+
+export interface Note extends UnsavedNote {
+  id: string,
+  created: string
 }
 
 export interface NoteDatabase {
@@ -10,6 +21,17 @@ export interface NoteDatabase {
 }
 
 const SESSION_DB_KEY = 'noteDatabase';
+
+type FormVal = string | File | null;
+
+export function newNote(title: FormVal, body: FormVal): UnsavedNote {
+  return {
+    title: '' + title,
+    body: '' + body,
+    tags: [],
+    links: []
+  };
+}
 
 export function newDatabase(): NoteDatabase {
   return {data: []};
@@ -28,19 +50,49 @@ function rollback() {
     .getItem(SESSION_DB_KEY) || 'null') || newDatabase();
 }
 
-export const saveNote = (note: Note) => {
+export const findNote = (id: string): Promise<Note> => {
+  return new Promise((res, rej) => {
+    const foundNote = noteDatabase.data.find(note => note.id === id);
+    if (foundNote) {
+      res(foundNote);
+    }
+    else {
+      rej('Note not found');
+    }
+  });
+}
+
+export const saveNote = (note: UnsavedNote): Promise<Note> => {
   return new Promise((complete, err) => {
-    const newNote = Object.assign({}, note);
-    newNote.id = '' + Math.floor(Math.random() * 1000000000);
+    const savedNote = Object.assign({}, note, {
+      id: '' + Math.floor(Math.random() * 1000000000),
+      created: (new Date()).toString()
+    });
+
     noteDatabase = {...noteDatabase,
-      data: noteDatabase.data.concat([newNote])
+      data: noteDatabase.data.concat([savedNote])
     }
     if (false && 'some error occurred') {
       rollback();
+      err('an error happened');
     }
     commit();
-    complete(newNote);
-  })
+    complete(savedNote);
+  });
+}
+
+export const linkNote = (fromId: string, toIds: string[], linkName: string) => {
+  const links: NoteLink[] = toIds.map(id => ({
+    noteId: id,
+    name: linkName
+  }));
+
+  return findNote(fromId)
+    .then(note => ({
+      ...note,
+      links: note.links.concat(links)
+    }))
+    .then(saveNote);
 }
 
 export const fetchAllNotes = () => {

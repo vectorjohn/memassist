@@ -5,14 +5,21 @@ import './App.css';
 
 import Header from './Header';
 import NoteForm from './NoteForm';
-import NoteList from './NoteList';
+import NoteList, { DisplayNote } from './NoteList';
 import SearchForm from './SearchForm';
 import { Note } from './notes/NoteService';
-import { searchChanged } from './actions';
+import { searchChanged, linkStarted, deleteNote, selectNote } from './actions';
 
 // import logo from './logo.svg';
-
-function App({notes, onSearch}: {notes: Note[], onSearch: (s: string) => any}) {
+type StrHandler = (s: string) => void;
+interface AppProps {
+  notes: DisplayNote[],
+  onSearch: StrHandler,
+  onLink: StrHandler,
+  onDelete: StrHandler,
+  onSelectNote: StrHandler
+}
+function App({notes, onSearch, onLink, onDelete, onSelectNote}: AppProps) {
   // tslint:disable-next-line:no-console
 
   return (
@@ -23,7 +30,11 @@ function App({notes, onSearch}: {notes: Note[], onSearch: (s: string) => any}) {
       </Header>
       <NoteForm />
       <SearchForm onSearch={onSearch} />
-      <NoteList notes={notes} />
+      <NoteList
+        notes={notes}
+        onLink={onLink}
+        onDelete={onDelete}
+        onSelect={onSelectNote}/>
     </div>
   );
 }
@@ -36,19 +47,43 @@ function submitted(event: React.FormEvent<HTMLFormElement>) {
   event.preventDefault();
 }
 */
+const toDisplayNotes = (notes: Note[], selectedIds: string[]) => notes
+  .map(n => ({
+    ...n,
+    selected: !!selectedIds.find(id => id === n.id)
+  }))
+
 const fuzzyOpts = {
   extract: (note: Note) => note.title + ' ' + note.body
 }
 const fuzzyMapToNotes = (r: fuzzy.FilterResult<Note>) => r.original;
 
-const mapStateToProps = (state: {notes: {data: Note[]}, filters: {search: string}}) => ({
+interface State {
+  notes: {data: Note[]},
+  filters: {search: string},
+  selectedNotes: string[]
+}
+
+const mapStateToProps = (state: State) => ({
   // notes: state.notes.data.filter(n => n.title.match(new RegExp(state.search.filter)))
-  notes: fuzzy.filter(state.filters.search, state.notes.data, fuzzyOpts).map(fuzzyMapToNotes)
+  notes: toDisplayNotes(
+    fuzzy.filter(state.filters.search, state.notes.data, fuzzyOpts).map(fuzzyMapToNotes),
+    state.selectedNotes
+  )
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
   onSearch: (s: string) => {
     return dispatch(searchChanged(s));
+  },
+  onLink: (id: string) => {
+    return dispatch(linkStarted(id));
+  },
+  onDelete: (id: string) => {
+    return dispatch(deleteNote(id));
+  },
+  onSelectNote: (id: string) => {
+    return dispatch(selectNote(id));
   }
 });
 
