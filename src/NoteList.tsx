@@ -10,6 +10,7 @@ export interface DisplayNote extends Note {
 function actionHandler(val: string, sh: StrHandler) {
   return (eh: React.MouseEvent) => {
     eh.preventDefault();
+    eh.stopPropagation();
     sh(val);
   }
 }
@@ -21,20 +22,21 @@ interface NoteListProps {
   onSelect: StrHandler
 }
 export default ({notes, onLink, onDelete, onSelect}: NoteListProps) =>
-  <dl className="NoteList">
+  <ul className="NoteList">
     {notes.map(note =>
-      <React.Fragment key={note.id}>
-        {/*<dt><input type="text" value={note.title} /></dt>*/}
-        <dt className={cls({'selected': note.selected})} onClick={actionHandler(note.id, onSelect)}>
+      <li key={note.id}
+        className={cls({'selected': note.selected})}
+        onClick={actionHandler(note.id, onSelect)}>
+        <h2>
           {note.title}
           <ul className="toolbar">
             <li><a href="link" onClick={actionHandler(note.id, onLink)}>Link</a></li>
             <li><a href="delete" onClick={actionHandler(note.id, onDelete)}>Delete</a></li>
           </ul>
-        </dt>
-        <dd className={cls({'selected': note.selected})} onClick={actionHandler(note.id, onSelect)}>
+        </h2>
+        <div>
           {note.body}
-        </dd>
-      </React.Fragment>
+        </div>
+      </li>
     )}
-  </dl>
+  </ul>

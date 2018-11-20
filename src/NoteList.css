@@ -1,13 +1,18 @@
 
-dl.NoteList {
+ul.NoteList {
     background-color: #445;
     display: block;
     margin-left: 45px;
     margin-right: 45px;
     text-align: left;
+    list-style-type: none;
 }
 
-dl.NoteList > dt {
+ul.NoteList > li {
+  display: block;
+}
+
+ul.NoteList > li > h2 {
   display: inline-block;
   width: auto;
   font-weight: bold;
@@ -18,13 +23,22 @@ dl.NoteList > dt {
   border-bottom: 2px dashed #aaa;
 }
 
-dl.NoteList > dd {
+ul.NoteList > li > div {
   padding: 0 0 20px 1em;
   white-space: pre;
 }
 
-dl.NoteList dd.selected,
-dl.NoteList dt.selected {
+ul.NoteList > li.selected {
   background-color: #557;
-  
+}
+
+ul.NoteList > li > h2 > ul.toolbar {
+  list-style-type: none;
+  display: inline-block;
+}
+
+ul.NoteList > li > h2 > ul.toolbar > li {
+  display: inline-block;
+  padding: 0 4px 0 4px;
+  font-size: .75em;
 }
